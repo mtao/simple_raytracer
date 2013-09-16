@@ -1,6 +1,5 @@
 #include "sphere.hpp"
 #include <cmath>
-
 bool Sphere::intersect(const Ray& ray, Intersection& isect) const {
     const Vector& d = ray.d;
     auto&& o = ray.o.topRows<3>();
@@ -17,11 +16,17 @@ bool Sphere::intersect(const Ray& ray, Intersection& isect) const {
             Point p = ray.eval(t);
             Vector n = p.topRows<3>().normalized();
             isect.set(t,n);
+            return true;
         }
     }
 
 
     return false;
+}
+
+Point Sphere::sample() const {
+    return Point::Random().normalized();
+
 }
 
 

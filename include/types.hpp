@@ -4,6 +4,7 @@
 #include <Eigen/Geometry>
 
 typedef Eigen::Vector3d Vector;
+typedef Eigen::Vector3d Vector3;
 typedef Eigen::Vector3d Point;
 typedef Eigen::Transform<double,3,Eigen::AffineCompact> AffineTransform;
 

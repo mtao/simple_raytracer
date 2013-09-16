@@ -4,6 +4,8 @@
 #include "intersection.hpp"
 
 class Sphere {
+    public:
     bool intersect(const Ray& ray, Intersection& isect) const;
+    Point sample() const;
 };
 #endif
