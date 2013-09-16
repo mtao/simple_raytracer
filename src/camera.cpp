@@ -16,10 +16,13 @@ QRgb Camera::shadeRay(const Ray& r) const {
 }
 
 void Camera::run_omp() {
+
     double width = m_film->width();
     double height = m_film->height();
 
+#ifdef USING_OPENMP
 #pragma omp parallel for
+#endif
     for(int c=0; c < m_film->width(); ++c) {
         Ray ray;
         ray.o = Point(0,0,-1);

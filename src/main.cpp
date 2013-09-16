@@ -11,7 +11,10 @@ int main() {
     auto root = std::make_shared<Scene>();
     auto instance = root->addNode();
     auto view_trans_node = instance->addTransformNode();
-    view_trans_node->set_transform(AffineTransform::Identity()*Eigen::Translation<double,3>(-0.5,0,-5));
+    AffineTransform base = AffineTransform::Identity();
+    base.translate(Vector(-0.5,0,-5));
+    view_trans_node->set_transform(base);
+
     auto light = std::make_shared<PointObject>(Point(0,0,-4));
 
     auto white_mat = std::make_shared<PhongMaterial>(Color(1,1,1),Color(1,1,1),Color(1,1,1),1.0);
@@ -27,10 +30,10 @@ int main() {
     translate->add(std::make_shared<Sphere>(), purple_mat);
 
     auto tn = root->addTransformNode();
-    tn->set_transform(AffineTransform::Identity() * Eigen::Scaling(1.0,2.0,0.5) * Eigen::Translation<double,3>(0,-2,3));
+    tn->apply_transform(Eigen::Scaling(1.0,2.0,0.5) * Eigen::AngleAxis<double>(-3.14159,Vector(0,0,1))  * Eigen::Translation<double,3>(0,-2,3));
     tn->add(instance);
     auto tn2 = root->addTransformNode();
-    tn2->set_transform(AffineTransform::Identity() * Eigen::Scaling(1.0,2.0,0.5) * Eigen::Translation<double,3>(0,2,3));
+    tn2->apply_transform(Eigen::Scaling(1.0,2.0,0.5) * Eigen::AngleAxis<double>(3.14159,Vector(0,0,1))  * Eigen::Translation<double,3>(0,2,3));
     tn2->add(instance);
 
     auto film = std::make_shared<Film>(3000,3000);

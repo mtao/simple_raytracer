@@ -56,6 +56,11 @@ class TransformationSceneNode: public SceneNode {
             m_invtransform = t.inverse();
         }
         const AffineTransform& get_transform() const {return m_transform;}
+        template <typename T>
+            void apply_transform(const T& A) {
+                m_transform = m_transform * A;
+                m_invtransform = A.inverse() * m_invtransform;
+            }
         Point sample() const;
     private:
         AffineTransform m_transform = AffineTransform::Identity();
