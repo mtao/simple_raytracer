@@ -9,6 +9,9 @@
 #include "phong_material.hpp"
 #include "phong_light.hpp"
 
+class SceneNode;
+class TransformationSceneNode;
+
 class SceneNode {
     public:
         SceneNode() {}
@@ -25,9 +28,21 @@ class SceneNode {
                 m_renderables.push_back(std::make_shared<Renderable<T> >(obj, mat));
             }
 
+        std::shared_ptr<SceneNode> addNode() {
+            auto n = std::make_shared<SceneNode>();
+            this->add(n);
+            return n;
+        }
+        std::shared_ptr<TransformationSceneNode> addTransformNode() {
+            auto n = std::make_shared<TransformationSceneNode>();
+            this->add(n);
+            return n;
+        }
+
         const std::vector<std::shared_ptr<RenderableBase> >& get_renderables() const {return m_renderables;}
 
         Point sample() const;
+        std::vector<std::shared_ptr<RenderableBase> > get_renderables() {return m_renderables;}
     private:
         std::vector<std::shared_ptr<RenderableBase> > m_renderables;
 
@@ -48,7 +63,7 @@ class TransformationSceneNode: public SceneNode {
 };
 
 
-class Scene: public TransformationSceneNode {
+class Scene: public SceneNode {
     public:
         const std::vector<PhongLight>& get_lights() const {return m_lights;}
 
