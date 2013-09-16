@@ -25,7 +25,7 @@ void Camera::run_omp() {
 #endif
     for(int c=0; c < m_film->width(); ++c) {
         Ray ray;
-        ray.o = Point(0,0,-1);
+        ray.o = Point(0,0,0);
         for(int r=0; r < m_film->height(); ++r) {
             Vector d;
             d(0) = c/width-0.5;
@@ -35,7 +35,7 @@ void Camera::run_omp() {
             ray.d = d.normalized();
 
 
-            m_film->setPixel(r,c,shadeRay(ray));
+            m_film->setPixel(c,r,shadeRay(ray));
 
         }
     }
@@ -44,7 +44,7 @@ void Camera::run() {
     double width = m_film->width();
     double height = m_film->height();
     Ray ray;
-    ray.o = Point(0,0,-1);
+    ray.o = Point(0,0,0);
     Vector d;
     d(2) = 1.0;
 
@@ -56,7 +56,7 @@ void Camera::run() {
             ray.d = d.normalized();
 
 
-            m_film->setPixel(r,c,shadeRay(ray));
+            m_film->setPixel(c,r,shadeRay(ray));
 
         }
     }
