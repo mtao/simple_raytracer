@@ -27,6 +27,9 @@ class SceneNode {
             void add(const std::shared_ptr<T>& obj, const std::shared_ptr<PhongMaterial>& mat = 0) {
                 m_renderables.push_back(std::make_shared<Renderable<T> >(obj, mat));
             }
+        void addRenderable(const std::shared_ptr<RenderableBase>& r) {
+            m_renderables.push_back(r);
+        }
 
         std::shared_ptr<SceneNode> addNode() {
             auto n = std::make_shared<SceneNode>();
@@ -42,7 +45,7 @@ class SceneNode {
         const std::vector<std::shared_ptr<RenderableBase> >& get_renderables() const {return m_renderables;}
 
         Point sample() const;
-        std::vector<std::shared_ptr<RenderableBase> > get_renderables() {return m_renderables;}
+        std::vector<std::shared_ptr<RenderableBase> >& get_renderables() {return m_renderables;}
     private:
         std::vector<std::shared_ptr<RenderableBase> > m_renderables;
 
@@ -50,6 +53,11 @@ class SceneNode {
 
 class TransformationSceneNode: public SceneNode {
     public:
+        TransformationSceneNode() = default;
+        TransformationSceneNode(TransformationSceneNode&&) = default;
+        TransformationSceneNode(const AffineTransform& t) {
+            set_transform(t);
+        }
         bool intersect(const Ray& ray, Intersection& isect) const;
         void set_transform(const AffineTransform& t) {
             m_transform = t;
@@ -71,6 +79,7 @@ class TransformationSceneNode: public SceneNode {
 class Scene: public SceneNode {
     public:
         const std::vector<PhongLight>& get_lights() const {return m_lights;}
+        void set_lights(const std::vector<PhongLight>& lights) {m_lights = lights;}
 
         template <typename T>
             void add_light(const std::shared_ptr<T>& obj, const std::shared_ptr<PhongMaterial>& mat) {

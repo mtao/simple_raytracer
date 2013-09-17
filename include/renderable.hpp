@@ -10,6 +10,7 @@ class RenderableBase {
         virtual bool intersect(const Ray& ray, Intersection& isect) const = 0;
         virtual Point sample() const = 0;
         virtual const std::shared_ptr<PhongMaterial>& get_material() const = 0;
+        virtual void set_material(const std::shared_ptr<PhongMaterial>&) = 0;
 };
 template <class T>
 class Renderable: public RenderableBase {
@@ -25,8 +26,12 @@ class Renderable: public RenderableBase {
         Point sample() const {
             return m_obj->sample();
         }
+        const std::shared_ptr<T> & get_object() {return m_obj;}
         const std::shared_ptr<PhongMaterial>& get_material() const {
             return m_mat;
+        }
+        void set_material(const std::shared_ptr<PhongMaterial>& mat) {
+            m_mat = mat;
         }
     private:
         std::shared_ptr<T> m_obj;

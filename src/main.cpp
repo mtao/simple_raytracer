@@ -3,7 +3,7 @@
 #include "scene.hpp"
 #include "camera.hpp"
 #include "point.hpp"
-//#include "scene_graph_optimizer.hpp"
+#include "scene_graph_optimizer.hpp"
 #include <time.h>
 #include <iostream>
 
@@ -39,6 +39,10 @@ int main() {
     auto film = std::make_shared<Film>(3000,3000);
     Camera c(root,film);
 
+    auto film2 = std::make_shared<Film>(3000,3000);
+    auto scene = SceneGraphOptimizer().run(root);
+    Camera c2(scene,film2);
+
 
     time_t start;
     time_t end;
@@ -53,7 +57,14 @@ int main() {
     c.run();
     time(&end);
     std::cout << "normal: " << difftime(end,start) << std::endl;
+
+    time(&start);
+    c2.run();
+    time(&end);
+    std::cout << "normal(with sgo): " << difftime(end,start) << std::endl;
+
     film->save("test.png");
+    film2->save("test2.png");
 
 
 }

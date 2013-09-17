@@ -35,6 +35,7 @@ SET(SimpleRaytracer_SOURCES
     src/camera.cpp
     src/main.cpp
     src/phong_light.cpp
+    src/scene_graph_optimizer.cpp
     )
 # Include files
 SET(SimpleRaytracer_HEADERS
@@ -49,6 +50,7 @@ SET(SimpleRaytracer_HEADERS
     include/phong_light.hpp
     include/phong_material.hpp
     include/color.hpp
+    include/scene_graph_optimizer.hpp
     )
 
 # Executable to build
