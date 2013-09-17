@@ -3,12 +3,8 @@
 #include "scene.hpp"
 #include "camera.hpp"
 #include "point.hpp"
-<<<<<<< HEAD
 #include "scene_graph_optimizer.hpp"
-=======
 #include <cstdlib>
-//#include "scene_graph_optimizer.hpp"
->>>>>>> ced33e92699c2853bddee34e8adc5aeb154607de
 #include <time.h>
 #include <iostream>
 
