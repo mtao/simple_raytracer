@@ -9,8 +9,8 @@
 #include <iostream>
 
 int main(int argc, char * argv[]) {
-    int width = 1024;
-    int height = 768;
+    int width = 4000;
+    int height = 4000;
 
     if(argc == 3) {
         width = atoi(argv[1]);
@@ -70,7 +70,7 @@ int main(int argc, char * argv[]) {
     //Create the camera object that takes film and a scene
     Camera c(root,film);
 
-    auto film2 = std::make_shared<Film>(3000,3000);
+    auto film2 = std::make_shared<Film>(width,height);
     auto scene = SceneGraphOptimizer().run(root);
     Camera c2(scene,film2);
 
