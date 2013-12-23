@@ -57,6 +57,7 @@ SET(SimpleRaytracerCore_HEADERS
     include/phong_material.hpp
     include/color.hpp
     include/scene_graph_optimizer.hpp
+    include/macros.hpp
     )
 
 

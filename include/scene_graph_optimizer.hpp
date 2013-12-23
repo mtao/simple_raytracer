@@ -3,14 +3,14 @@
 #include "scene.hpp"
 class SceneGraphOptimizer {
     public:
-        SceneGraphOptimizer(): scene(std::make_shared<Scene>()) {}
-        std::shared_ptr<Scene> run(const std::shared_ptr<Scene>& s);
-        void run(SceneNode& n, const AffineTransform& T, const std::shared_ptr<PhongMaterial>& curMat);
-        void run(TransformationSceneNode& n, const AffineTransform& T, const std::shared_ptr<PhongMaterial>& curMat);
-        void recast_and_run(const std::shared_ptr<RenderableBase>& r, const AffineTransform& T, const std::shared_ptr<PhongMaterial>& curMat);
-        void add(const std::shared_ptr<RenderableBase>& r, const AffineTransform& T, const std::shared_ptr<PhongMaterial>& curMat);
+        SceneGraphOptimizer(): scene(Scene::create()) {}
+        std::shared_ptr<Scene> run(const Scene::Ptr& s);
+        void run(SceneNode& n, const AffineTransform& T, const PhongMaterial::Ptr& curMat);
+        void run(TransformationSceneNode& n, const AffineTransform& T, const PhongMaterial::Ptr& curMat);
+        void recast_and_run(const std::shared_ptr<RenderableBase>& r, const AffineTransform& T, const PhongMaterial::Ptr& curMat);
+        void add(const std::shared_ptr<RenderableBase>& r, const AffineTransform& T, const PhongMaterial::Ptr& curMat);
     private:
-        std::shared_ptr<Scene> scene;
+        Scene::Ptr scene;
 
 };
 #endif

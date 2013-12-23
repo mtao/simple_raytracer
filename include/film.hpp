@@ -3,8 +3,10 @@
 
 #include <memory>
 #include <QtGui/QImage>
+#include "macros.hpp"
 class Film {
     public:
+        PTR_CONSTRUCTOR(Film)
         Film(int rows, int cols);
         void save(const QString& filename = "image.png");
         int width() const {return m_img.width();}

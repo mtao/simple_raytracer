@@ -17,29 +17,29 @@ int main(int argc, char * argv[]) {
         height = atoi(argv[2]);
     }
     //Root of scene
-    auto root = std::make_shared<Scene>();
+    auto root = Scene::create();
 
     //Create a point object at 0,0,-4 to add a light source to the scene.  It has a white material
-    auto light = std::make_shared<PointObject>(Point(0,0,-4));
+    auto light = PointObject::create(Point(0,0,-4));
     //Declare the color of the light in a phong sense
-    auto white_mat = std::make_shared<PhongMaterial>(Color(1,1,1),Color(1,1,1),Color(1,1,1));
+    auto white_mat = PhongMaterial::create(Color(1,1,1),Color(1,1,1),Color(1,1,1));
     //Add light to list of lights.  Can also use other objects / instances as the source but currently they won't be sampled properly
     root->add_light(light, white_mat);
 
     //Materials for use later on
-    auto red_mat = std::make_shared<PhongMaterial>(Color(0.4,0,0),Color(0.1,.1,.1),Color(.1,.1,.1),1.0);
-    auto blue_mat = std::make_shared<PhongMaterial>(Color(0.0,0.0,0.4),Color(0.1,.1,.1),Color(.1,.1,.1),1.0);
+    auto red_mat =  PhongMaterial::create(Color(0.4,0,0),Color(0.1,.1,.1),Color(.1,.1,.1),1.0);
+    auto blue_mat = PhongMaterial::create(Color(0.0,0.0,0.4),Color(0.1,.1,.1),Color(.1,.1,.1),1.0);
 
     //Creating a new node that will be used for instancing
-    auto instance = std::make_shared<SceneNode>();
+    auto instance = SceneNode::create();
     //Add nodes to transform the objects up and down + add the objects as leaves in scene dag
     auto up = instance->addTransformNode();
     up->apply_transform(Eigen::Translation<double,3>(0.0, 0.5,0.0));
-    up->add(std::make_shared<Sphere>(), red_mat);
+    up->add(Sphere::create(), red_mat);
 
     auto down = instance->addTransformNode();
     down->apply_transform(Eigen::Translation<double,3>(0.0,-0.5,0.0));
-    down->add(std::make_shared<Sphere>(), blue_mat);
+    down->add(Sphere::create(), blue_mat);
 
 
 
@@ -66,11 +66,11 @@ int main(int argc, char * argv[]) {
     tn2->add(instance);
 
     //Create the film object (currently just a thin wrapper over QImage)
-    auto film = std::make_shared<Film>(width,height);
+    auto film = Film::create(width,height);
     //Create the camera object that takes film and a scene
     Camera c(root,film);
 
-    auto film2 = std::make_shared<Film>(width,height);
+    auto film2 = Film::create(width,height);
     auto scene = SceneGraphOptimizer().run(root);
     Camera c2(scene,film2);
 

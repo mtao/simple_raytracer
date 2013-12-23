@@ -7,23 +7,23 @@
 
 bool SceneNode::intersect(const Ray& ray, Intersection& isect) const {
     bool hasIntersection = false;
-    for(const std::shared_ptr<RenderableBase>& renderable: this->get_renderables()) {
+    for(const RenderableBase::Ptr& renderable: this->get_renderables()) {
         hasIntersection |= renderable->intersect(ray,isect);
     }
     return hasIntersection;
 }
 
-void SceneNode::addRenderable(const std::shared_ptr<RenderableBase>& r) {
+void SceneNode::addRenderable(const RenderableBase::Ptr& r) {
     m_renderables.push_back(r);
 }
 
-std::shared_ptr<SceneNode> SceneNode::addNode() {
-    auto n = std::make_shared<SceneNode>();
+SceneNode::Ptr SceneNode::addNode() {
+    auto n = SceneNode::create();
     this->add(n);
     return n;
 }
-std::shared_ptr<TransformationSceneNode> SceneNode::addTransformNode() {
-    auto n = std::make_shared<TransformationSceneNode>();
+TransformationSceneNode::Ptr SceneNode::addTransformNode() {
+    auto n = TransformationSceneNode::create();
     this->add(n);
     return n;
 }
@@ -46,7 +46,7 @@ Point TransformationSceneNode::sample() const {
 bool TransformationSceneNode::intersect(const Ray& ray, Intersection& isect) const {
     Ray r = ray.apply(this->get_transform());
     bool hasIntersection = false;
-    for(const std::shared_ptr<RenderableBase>& renderable: this->get_renderables()) {
+    for(const RenderableBase::Ptr& renderable: this->get_renderables()) {
         hasIntersection |= renderable->intersect(r,isect);
     }
     if(hasIntersection) {

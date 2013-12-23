@@ -1,12 +1,13 @@
 #ifndef RENDERABLE_HPP
 #define RENDERABLE_HPP
-#include <memory>
 #include "ray.hpp"
 #include "intersection.hpp"
 #include "phong_material.hpp"
+#include "macros.hpp"
 
 class RenderableBase {
     public:
+        typedef std::shared_ptr<RenderableBase> Ptr;
         virtual bool intersect(const Ray& ray, Intersection& isect) const = 0;
         virtual Point sample() const = 0;
         virtual void renderGL() const = 0;
@@ -17,7 +18,7 @@ class RenderableBase {
 template <class T>
 class Renderable: public RenderableBase {
     public:
-        Renderable(const std::shared_ptr<T>& obj, const std::shared_ptr<PhongMaterial>& mat): m_obj(obj), m_mat(mat) {}
+        PTR_CONSTRUCTOR(Renderable<T>)
         bool intersect(const Ray& ray, Intersection& isect) const;
         void renderGL() const {
             return m_obj->renderGL();
@@ -33,6 +34,7 @@ class Renderable: public RenderableBase {
             m_mat = mat;
         }
     private:
+        Renderable(const std::shared_ptr<T>& obj, const std::shared_ptr<PhongMaterial>& mat): m_obj(obj), m_mat(mat) {}
         std::shared_ptr<T> m_obj;
         std::shared_ptr<PhongMaterial> m_mat;
 };

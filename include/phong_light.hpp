@@ -3,13 +3,15 @@
 #include "color.hpp"
 #include "ray.hpp"
 #include "renderable.hpp"
+#include "macros.hpp"
 #include <memory>
 
 class PhongLight {
     public:
         PhongLight(const std::shared_ptr<RenderableBase> & r): m_renderable(r) {}
         Color shade(const Ray& r, const Intersection& isect) const;
-    private:
+    protected:
         std::shared_ptr<RenderableBase> m_renderable;
+
 };
 #endif
