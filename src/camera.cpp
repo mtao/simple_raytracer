@@ -19,20 +19,20 @@ void Camera::run_omp() {
 
     double width = m_film->width();
     double height = m_film->height();
+    const Vector side = up.cross(lookAt).normalized();
 
 #ifdef USING_OPENMP
 #pragma omp parallel for
 #endif
     for(int c=0; c < m_film->width(); ++c) {
         Ray ray;
-        ray.o = Point(0,0,0);
+        ray.o = eye;
+        double sc = c/width-0.5;
+        auto&& dd = lookAt + sc*side;
         for(int r=0; r < m_film->height(); ++r) {
-            Vector d;
-            d(0) = c/width-0.5;
-            d(1) = r/height-0.5;
-            d(2) = 1.0;
 
-            ray.d = d.normalized();
+            double sr = r/height-0.5;
+            ray.d = (dd + sr * up).normalized();
 
 
             m_film->setPixel(c,r,shadeRay(ray));
@@ -44,16 +44,18 @@ void Camera::run() {
     double width = m_film->width();
     double height = m_film->height();
     Ray ray;
-    ray.o = Point(0,0,0);
+    ray.o = eye;
+    const Vector side = up.cross(lookAt).normalized();
     Vector d;
-    d(2) = 1.0;
 
     for(int c=0; c < m_film->width(); ++c) {
-        d(0) = c/width-0.5;
-        for(int r=0; r < m_film->height(); ++r) {
-            d(1) = r/height-0.5;
+        double sc = c/width-0.5;
+        auto&& dd = lookAt + sc*side;
 
-            ray.d = d.normalized();
+        for(int r=0; r < m_film->height(); ++r) {
+            double sr = r/height-0.5;
+            ray.d = (dd + sr * up).normalized();
+
 
 
             m_film->setPixel(c,r,shadeRay(ray));

@@ -14,6 +14,9 @@ class Camera {
     private:
         std::shared_ptr<Film> m_film;
         std::shared_ptr<Scene> m_scene;
+        Point eye = Point(0,0,0);
+        Vector lookAt = Vector(0,0,1);
+        Vector up = Vector(0,1,0);
 };
 
 #endif

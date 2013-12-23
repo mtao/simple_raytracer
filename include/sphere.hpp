@@ -7,5 +7,6 @@ class Sphere {
     public:
     bool intersect(const Ray& ray, Intersection& isect) const;
     Point sample() const;
+    void renderGL() const;
 };
 #endif

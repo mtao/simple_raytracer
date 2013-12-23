@@ -1,5 +1,10 @@
 #include "sphere.hpp"
 #include <cmath>
+#include <iostream>
+#ifdef USING_OPENGL
+#include <GL/glew.h>
+#include <Eigen/OpenGLSupport>
+#endif
 bool Sphere::intersect(const Ray& ray, Intersection& isect) const {
     const Vector& d = ray.d;
     auto&& o = ray.o.topRows<3>();
@@ -30,3 +35,10 @@ Point Sphere::sample() const {
 }
 
 
+void Sphere::renderGL() const {
+#ifdef USING_OPENGL
+    glBegin(GL_POINTS);
+    glVertex(Vector());
+    glEnd();
+#endif
+}

@@ -10,6 +10,7 @@ class PointObject {
         bool intersect(const Ray& ray, Intersection& isect) {
         return false;}
         Point sample() {return m_pos;}
+        void renderGL() const;
     private:
         Point m_pos;
 };

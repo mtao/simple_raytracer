@@ -9,19 +9,18 @@ class RenderableBase {
     public:
         virtual bool intersect(const Ray& ray, Intersection& isect) const = 0;
         virtual Point sample() const = 0;
+        virtual void renderGL() const = 0;
         virtual const std::shared_ptr<PhongMaterial>& get_material() const = 0;
         virtual void set_material(const std::shared_ptr<PhongMaterial>&) = 0;
 };
+
 template <class T>
 class Renderable: public RenderableBase {
     public:
         Renderable(const std::shared_ptr<T>& obj, const std::shared_ptr<PhongMaterial>& mat): m_obj(obj), m_mat(mat) {}
-        bool intersect(const Ray& ray, Intersection& isect) const {
-            bool succ = m_obj->intersect(ray, isect);
-            if( succ && m_mat ) {
-                isect.material = m_mat;
-            }
-            return succ;
+        bool intersect(const Ray& ray, Intersection& isect) const;
+        void renderGL() const {
+            return m_obj->renderGL();
         }
         Point sample() const {
             return m_obj->sample();
@@ -37,5 +36,13 @@ class Renderable: public RenderableBase {
         std::shared_ptr<T> m_obj;
         std::shared_ptr<PhongMaterial> m_mat;
 };
+template <typename T>
+bool Renderable<T>::intersect(const Ray& ray, Intersection& isect) const {
+    bool succ = m_obj->intersect(ray, isect);
+    if( succ && m_mat ) {
+        isect.material = m_mat;
+    }
+    return succ;
+}
 
 #endif

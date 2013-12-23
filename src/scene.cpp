@@ -1,5 +1,9 @@
 #include "scene.hpp"
 #include <cstdlib>
+#ifdef USING_OPENGL
+#include <GL/glew.h>
+#include <Eigen/OpenGLSupport>
+#endif
 
 bool SceneNode::intersect(const Ray& ray, Intersection& isect) const {
     bool hasIntersection = false;
@@ -7,6 +11,27 @@ bool SceneNode::intersect(const Ray& ray, Intersection& isect) const {
         hasIntersection |= renderable->intersect(ray,isect);
     }
     return hasIntersection;
+}
+
+void SceneNode::addRenderable(const std::shared_ptr<RenderableBase>& r) {
+    m_renderables.push_back(r);
+}
+
+std::shared_ptr<SceneNode> SceneNode::addNode() {
+    auto n = std::make_shared<SceneNode>();
+    this->add(n);
+    return n;
+}
+std::shared_ptr<TransformationSceneNode> SceneNode::addTransformNode() {
+    auto n = std::make_shared<TransformationSceneNode>();
+    this->add(n);
+    return n;
+}
+
+void SceneNode::renderGL() const {
+    for(auto&& r: m_renderables) {
+        r->renderGL();
+    }
 }
 
 //TODO: Naive scheme...
@@ -28,4 +53,24 @@ bool TransformationSceneNode::intersect(const Ray& ray, Intersection& isect) con
         isect.normal = (m_invtransform.linear().transpose() * isect.normal).normalized();
     }
     return hasIntersection;
+}
+TransformationSceneNode::TransformationSceneNode(const AffineTransform& t) {
+    set_transform(t);
+}
+void TransformationSceneNode::set_transform(const AffineTransform& t) {
+    m_transform = t;
+    m_invtransform = t.inverse();
+}
+
+
+void TransformationSceneNode::renderGL() const {
+#ifdef USING_OPENGL
+    glPushMatrix();
+    glMultMatrix(m_transform);
+
+    for(auto&& r: get_renderables()) {
+        r->renderGL();
+    }
+    glPopMatrix();
+#endif
 }

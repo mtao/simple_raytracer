@@ -6,19 +6,25 @@ SET(CMAKE_LIBRARY_OUTPUT_DIR ${PROJECT_BINARY_DIR}/lib)
 SET(CMAKE_ARCHIVE_OUTPUT_DIR ${PROJECT_BINARY_DIR}/lib)
 
 ADD_DEFINITIONS(-std=c++11)
-ADD_DEFINITIONS(-Werror)
+#ADD_DEFINITIONS(-Werror)
 ADD_DEFINITIONS(-Wall)
 #ADD_DEFINITIONS(-pg)
 FIND_PACKAGE( OpenMP )
-IF(OPENMP_FOUND)
+IF(OpenMP_FOUND)
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 ADD_DEFINITIONS(-DUSING_OPENMP)
 ENDIF(OpenMP_FOUND)
 
+FIND_PACKAGE( GLEW )
+IF(GLEW_FOUND)
+    INCLUDE_DIRECTORIES(${GLEW_INCLUDE_DIRS})
+ENDIF(GLEW_FOUND)
+
+
 # Include dirs
-INCLUDE_DIRECTORIES(/opt/boost_1_44_0/include ${CMAKE_CURRENT_SOURCE_DIR}/include /usr/local/include/eigen3)
+INCLUDE_DIRECTORIES(/opt/boost_1_44_0/include ${CMAKE_CURRENT_SOURCE_DIR}/include /usr/local/include/eigen3 /usr/local/include/eigen3/unsupported)
 # Autogen'd moc code appears in the BINARY_DIR I believe
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -28,17 +34,17 @@ FIND_PACKAGE(Qt5Core)
 
 
 # Source files
-SET(SimpleRaytracer_SOURCES
+SET(SimpleRaytracerCore_SOURCES
     src/scene.cpp
     src/sphere.cpp
     src/film.cpp
     src/camera.cpp
-    src/main.cpp
     src/phong_light.cpp
     src/scene_graph_optimizer.cpp
+    src/point.cpp
     )
 # Include files
-SET(SimpleRaytracer_HEADERS
+SET(SimpleRaytracerCore_HEADERS
     include/intersection.hpp
     include/ray.hpp
     include/scene.hpp
@@ -53,9 +59,32 @@ SET(SimpleRaytracer_HEADERS
     include/scene_graph_optimizer.hpp
     )
 
-# Executable to build
-ADD_EXECUTABLE(SimpleRaytracer
-    ${SimpleRaytracer_SOURCES}
-    ${SimpleRaytracer_HEADERS})
 
-QT5_USE_MODULES(SimpleRaytracer Gui)
+SET(SimpleRaytracerGUI_SOURCES
+    src/main_gl.cpp
+    src/mainwindow.cpp
+    src/glwidget.cpp
+    )
+
+SET(SimpleRaytracerGUI_HEADERS
+    include/mainwindow.hpp
+    include/glwidget.hpp
+    )
+
+
+# Executable to build
+ADD_EXECUTABLE(simple_raytracer
+    src/main_cl.cpp
+    ${SimpleRaytracerCore_SOURCES}
+    ${SimpleRaytracerCore_HEADERS})
+ADD_EXECUTABLE(simple_raytracer-qt5
+    ${SimpleRaytracerCore_SOURCES}
+    ${SimpleRaytracerCore_HEADERS}
+    ${SimpleRaytracerGUI_SOURCES}
+    ${SimpleRaytracerGUI_HEADERS}
+    )
+TARGET_LINK_LIBRARIES(simple_raytracer-qt5 GL ${GLEW_LIBRARIES})
+SET_TARGET_PROPERTIES(simple_raytracer-qt5 PROPERTIES COMPILE_DEFINITIONS "USING_OPENGL")
+
+QT5_USE_MODULES(simple_raytracer Gui)
+QT5_USE_MODULES(simple_raytracer-qt5 Gui OpenGL Widgets)
